@@ -1,5 +1,7 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from test import testfun
+import model
+
 
 app = Flask(__name__)
 
@@ -87,6 +89,14 @@ def hello_post():
 @app.route("/two_sum/<int:x>/<int:y>")
 def two_sum(x: int, y: int) -> str:
     return str(testfun(x, y))
+
+
+@app.route('/show_staff')
+def hello_google():
+    staff_data = model.getStaff()
+    column = ['ID', 'Name', 'DeptId', 'Age', 'Gender', 'Salary']
+    return render_template('show_staff.html', staff_data=staff_data,
+                           column=column)
 
 
 if __name__ == "__main__":
