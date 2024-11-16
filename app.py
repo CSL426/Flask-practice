@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+from test import testfun
 
 app = Flask(__name__)
 
@@ -20,9 +21,8 @@ def greeting(username):
     return output_html
 
 
-# [GET] URL/hello?username=Allen&age=22
-@app.route("/api/v2/apartment/dep_id/<dep_id>/<emp_id>")
-def get_employee(dep_id, emp_id):
+@app.route("/api/v2/department/dep_id/<string:dep_id>/emp_id/<int:emp_id>")
+def get_employee(dep_id: str, emp_id: int):
     query_sql = f"""
     select
         emp_name,
@@ -32,6 +32,8 @@ def get_employee(dep_id, emp_id):
     where dep_id = '{dep_id}'
     and emp_id = '{emp_id}'
     """
+    print(type(dep_id))
+    print(type(emp_id))
     # db connect(query_sql)
     return {
         "emp_name": "Spark Liao",
@@ -39,7 +41,53 @@ def get_employee(dep_id, emp_id):
         "emp_seat": "22",
     }
 
+# [GET] URL/hello?username=Allen&age=22
+
+
+@app.route("/hello")
+def hello():
+    # return None if user do not gave the parameter
+    username = request.args.get("username")
+    age = request.args.get("age")
+
+    if not username:
+        return "What the fuck? Your name?"
+    if not age:
+        return "What the fuck? How old are son of bitch?"
+
+    return f"Hello {username}, you are {age} years old."
+
 
 # [POST] URL/hello_post  form_data = {"username": "Allen"}
+@app.route("/hello_post", methods=["GET", "POST"])
+def hello_post():
+    form_html = """
+    <form method="post" action="/hello_post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <input type="submit" value="Submit">
+    </form>
+    """
+
+    request_method = request.method
+    username = request.form.get("username")
+
+    if request_method == "POST":
+        if len(username) > 0:
+            form_html += f"""
+            <h1>Hello! {username}</h1>"""
+        else:
+            form_html += f"""
+            <h1>What's your name?</h1>"""
+
+    return form_html
+
+
+# URL//two_sum/<int:x>/<int:y>
+@app.route("/two_sum/<int:x>/<int:y>")
+def two_sum(x: int, y: int) -> str:
+    return str(testfun(x, y))
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=5001)
