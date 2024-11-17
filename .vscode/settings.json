@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "pythonPath": "C:\\Users\\TMP214\\.pyenv\\pyenv-win\\versions\\3.12.4.conda\\python.exe"
+        }
+    ]
+}
